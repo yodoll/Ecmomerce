@@ -82,7 +82,7 @@ export default function Header() {
                             <ShoppingCartIcon />
                         </StyledBadge>
                     </IconButton>
-                    <Link href="/signup">
+                    <Link href="/login">
                         <Button sx={{ color: "white", "&:hover": { opacity: 0.5 } }}>Đăng nhập</Button>
                     </Link>
                 </Box>

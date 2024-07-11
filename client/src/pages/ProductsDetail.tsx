@@ -13,12 +13,14 @@ import {
   import { Product } from "../types/Product";
   import Header from "../components/Header";
   import Footer from "../components/Footer";
+import PageNotFound from "./PageNotFound";
   
   function ProductsDetail() {
-    const { id } = useParams<{ id: string }>();
+    const { id } = useParams();
     const [loading, setLoading] = useState<boolean>(false);
     const [product, setProduct] = useState<Product | null>(null);
     const [quantity, setQuantity] = useState<number>(1); // State for quantity
+    
   
     useEffect(() => {
       const getProduct = async () => {
@@ -61,16 +63,11 @@ import {
     }
   
     if (!product) {
-      return (
-        <Typography variant="h6" align="center">
-          Product not found.
-        </Typography>
-      );
+      return <PageNotFound />;
     }
   
     return (
       <>
-        <Header />
         <Box
           sx={{
             backgroundColor: "#f5f5f5",
@@ -89,7 +86,7 @@ import {
                   }}
                 >
                   <img
-                    src={product.thumbnail}
+                    src={product.image}
                     alt={product.title}
                     style={{
                       position: "absolute",
@@ -157,25 +154,13 @@ import {
                     Category: {product.category}
                   </Typography>
                   <Typography variant="subtitle1" gutterBottom>
-                    Shipping Information: {product.shippingInformation}
+                    Description: {product.description}
                   </Typography>
-                  <Typography variant="subtitle1" gutterBottom>
-                    Rating:
-                  </Typography>
-                  <Rating
-                    name="product-rating"
-                    value={product.rating} // Assume product.rating is a number (e.g., 4.5)
-                    precision={0.5} // Optional: độ chính xác của số sao (có thể là 0.5 hoặc 1)
-                    readOnly // Để không cho phép người dùng thay đổi đánh giá
-                    sx={{ fontSize: "1.2rem" }} // Điều chỉnh kích thước của Rating
-                  />
                 </Box>
               </Grid>
             </Grid>
           </Container>
-        </Box>{" "}
-        {/* End of product details section */}
-        <Footer />
+        </Box>
       </>
     );
   }

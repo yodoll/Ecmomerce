@@ -11,9 +11,10 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Product } from "../types/Product";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Product } from "src/types/Product";
+import CardProduct from "src/components/CardProduct";
 
 function Homepage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -22,20 +23,20 @@ function Homepage() {
   const [viewAll, setViewAll] = useState<boolean>(false); // State to manage view all products
   const productsPerPage = 8;
 
-  useEffect(() => {
-    const fetchProducts = async () => {
+    const getAllProducts = async () => {
       try {
-        setLoading(true);
-        const { data } = await axios.get(`http://localhost:3000/products`);
-        setProducts(data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
+          setLoading(true);
+          const { data } = await axios.get("http://localhost:3000/products");
+          setProducts(data);
+          console.log(data);
+          
+      } catch (error) {} finally {
         setLoading(false);
       }
-    };
-
-    fetchProducts();
+  };
+  
+  useEffect(() => {
+      getAllProducts();
   }, []);
 
   const totalPages = Math.ceil(products.length / productsPerPage);
@@ -83,7 +84,6 @@ function Homepage() {
 
   return (
     <>
-      <Header />
       <div style={{ paddingTop: "100px", paddingBottom: "100px" }}>
         <Grid container spacing={3} justifyContent="center">
           {loading ? (
@@ -93,42 +93,7 @@ function Homepage() {
           ) : (
             currentProducts.map((product, index) => (
               <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                <Card
-                  style={{
-                    // maxWidth: 300,
-                    margin: "10px",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                    transition: "transform 0.3s ease-in-out",
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    style={{ height: 200, objectFit: "cover" }}
-                    image={product.thumbnail}
-                    alt={product.title}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h6" component="div">
-                      {product.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{fontSize: "16px"}}>
-                      Price: ${product.price}
-                    </Typography>
-                  </CardContent>
-                  <CardActions sx={{justifyContent: "space-between"}}>
-                    <Button size="small" color="primary">
-                      Add to cart
-                    </Button>
-                    <Link
-                      to={`/product/${product.id}`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Button size="small" color="primary">
-                        View Detail
-                      </Button>
-                    </Link>
-                  </CardActions>
-                </Card>
+                  <CardProduct _id={product._id} title={product.title} image={product.image} price={product.price} category={product.category} description={""} />
               </Grid>
             ))
           )}
@@ -155,7 +120,6 @@ function Homepage() {
           </Grid>
         </Grid>
       </div>
-      <Footer />
     </>
   );
 }
