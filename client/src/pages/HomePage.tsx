@@ -1,20 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
   Grid,
-  Typography,
   LinearProgress,
 } from "@mui/material";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import { Product } from "src/types/Product";
 import CardProduct from "src/components/CardProduct";
+import api from "src/api/api";
 
 function Homepage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -26,7 +18,7 @@ function Homepage() {
     const getAllProducts = async () => {
       try {
           setLoading(true);
-          const { data } = await axios.get("http://localhost:3000/products");
+          const { data } = await api.get("/products");
           setProducts(data);
           console.log(data);
           

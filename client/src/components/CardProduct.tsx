@@ -1,10 +1,9 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Product } from "src/types/Product";
 
 
-function CardProduct({_id, title, image, price, category} : Product) {
+function CardProduct({_id, title, image, price} : Product) {
     return (
         <>
             <Card

@@ -1,6 +1,5 @@
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 // import FormControlLabel from "@mui/material/FormControlLabel";
 // import Checkbox from "@mui/material/Checkbox";
@@ -13,16 +12,21 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { UserForm } from "src/types/User";
 import { useForm, SubmitHandler } from "react-hook-form";
-import bcrypt from "bcryptjs";
-import axios from "axios";
 import Flash from "src/components/Flash";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "src/api/api";
+import React from "react";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 export default function SignUp() {
     const [showFlash, setShowFlash] = useState(false);
+    const [flashMessage, setFlashMessage] = React.useState("");
+    const [flashSeverity, setFlashSeverity] = React.useState<"success" | "error" | "warning" | "info">("success");
+    const handleCloseFlash = () => {
+        setShowFlash(false);
+      };
     const navigate = useNavigate();
     const {
         register,
@@ -33,25 +37,23 @@ export default function SignUp() {
     const password = watch("password");
     const onSubmit: SubmitHandler<UserForm> = async (data) => {
         try {
-            const hashedPassword = await bcrypt.hash(data.password, 10); // Sử dụng 10 vòng lặp
-            const hashedConfirmPassword = await bcrypt.hash(data.confirmPassword, 10);
-            await axios.post("http://localhost:3000/user", {
-                ...data,
-                password: hashedPassword,
-                confirmPassword: hashedConfirmPassword,
-            });
+            await api.post("/auth/register", data);
             setShowFlash(true);
+            setFlashMessage("You're sign-up successfully");
+            setFlashSeverity("success");
             setTimeout(() => {
-                navigate("/login"); // Chuyển hướng sau 3-4 giây
+                navigate("/login"); // Chuyển hướng sau 2 giây
             }, 2000);
         } catch (error) {
-            console.log(error);
+            setShowFlash(true);
+            setFlashMessage("Email is exists!");
+            setFlashSeverity("error");
         }
     };
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
-                <Flash isShow={showFlash} />
+                <Flash isShow={showFlash} message={flashMessage} severity={flashSeverity} onClose={handleCloseFlash} />
                 <Box
                     sx={{
                         marginTop: 8,
