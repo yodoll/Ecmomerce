@@ -12,6 +12,7 @@ import Link from "@mui/material/Link";
 import {Badge, BadgeProps, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MenuPopup from "./MenuPopup";
+import { useUser } from "src/context/User";
 
 const styles = {
     appBar: {
@@ -32,15 +33,15 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 }));
 
 export default function Header() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const token = localStorage.getItem("token");
+    const {user, setUser} = useUser();
+    // const token = localStorage.getItem("token");
     useEffect(() => {
-        setIsLoggedIn(!!token);
-    }, [token]);
+        const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
+        setUser(userInfo);    
+    }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        setIsLoggedIn(false);
+        setUser(null);
     };
 
     return (
@@ -103,7 +104,7 @@ export default function Header() {
                             <ShoppingCartIcon />
                         </StyledBadge>
                     </IconButton>
-                    {isLoggedIn ? (
+                    {user ? (
                         <>
                             <MenuPopup onLogOut={handleLogout} />
                         </>

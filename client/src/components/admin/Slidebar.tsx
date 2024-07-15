@@ -32,10 +32,10 @@ function SliderBar() {
                 <Box sx={{ overflow: "auto" }}>
                     <List>
                         {[
-                            { text: "Danh sách sản phẩm", link: "/products" },
-                            { text: "Danh mục sản phẩm", link: "/category-list" },
-                            { text: "Thông tin người dùng", link: "/user-info" },
-                            { text: "Danh sách đơn hàng", link: "/order-list" },
+                            { text: "Danh sách sản phẩm", link: "/admin/products" },
+                            { text: "Danh mục sản phẩm", link: "admin/category-list" },
+                            { text: "Thông tin người dùng", link: "admin/user-info" },
+                            { text: "Danh sách đơn hàng", link: "admin/order-list" },
                         ].map((item, index) => (
                             <ListItem key={item.text} disablePadding>
                                 <ListItemButton component={Link} to={item.link}> {/* Use component={Link} and to={item.link} */}
