@@ -15,10 +15,12 @@ class AuthController {
                 throw new ApiError(StatusCodes.BAD_REQUEST, errors);
             }
             const emailExist = await getUserByEmail(email);
-            if (emailExist) throw new ApiError(StatusCodes.BAD_REQUEST, "Email da duoc dang ky");
+            if (emailExist) res.status(400).json({message: "Email already exists!"})
             // Check if passwords match
             if (password !== confirmPassword) {
-                throw new ApiError(StatusCodes.BAD_REQUEST, "Mật khẩu không khớp");
+                return res.status(400).json({
+                  message: "Password is no valid!"
+                })
             }
             const hashPassword = await bcrypt.hash(password, 10);
             const hashConfirmPassword = await bcrypt.hash(confirmPassword, 10);
@@ -26,7 +28,7 @@ class AuthController {
                 email,
                 username,
                 password: hashPassword,
-                confirmPassword: hashConfirmPassword
+                confirmPassword: hashConfirmPassword,
             });
             // bda
             res.status(StatusCodes.OK).json({
@@ -47,15 +49,22 @@ class AuthController {
               throw new ApiError(StatusCodes.BAD_REQUEST, errors);
             }
             const checkUser = await getUserByEmail(email);
-            if (!checkUser)
-              throw new ApiError(StatusCodes.BAD_REQUEST, "Tai khoan ko hop le");
-      
+            if (!checkUser){
+              // throw new ApiError(StatusCodes.BAD_REQUEST, "Tai khoan ko hop le");
+              return res.status(400).json({
+                message: "Email not exists!"
+              })
+            }
             const checkPassword = await bcrypt.compare(
               password,
               checkUser.password
             );
-            if (!checkPassword)
-              throw new ApiError(StatusCodes.BAD_REQUEST, "Tai khoan ko hop le");
+            if (!checkPassword){
+                return res.status(400).json({
+                  message: "Password is incorrect!"
+                });
+            }
+              
       
             const token = jwt.sign({ id: checkUser._id }, "process.env.SECRET_KEY", {
               expiresIn: "1w",

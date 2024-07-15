@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
+
+import mongoose, { Schema } from "mongoose";
 
 const ProductSchema = new Schema(
   {
@@ -20,7 +20,8 @@ const ProductSchema = new Schema(
       required: true,
     },
     category: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "Category"
     },
     isShow: {
       type: Boolean,
