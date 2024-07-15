@@ -32,7 +32,7 @@ function CardProduct({_id, title, image, price} : Product) {
                     <Button size="small" color="primary">
                         Add to cart
                     </Button>
-                    <Link to={`/product/${_id}`} style={{ textDecoration: "none" }}>
+                    <Link to={`/products/${_id}`} style={{ textDecoration: "none" }}>
                         <Button size="small" color="primary">
                             View Detail
                         </Button>

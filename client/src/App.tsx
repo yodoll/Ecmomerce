@@ -12,6 +12,7 @@ import AdminAddProduct from "./pages/admin/product/add";
 import AdminEditProduct from "./pages/admin/product/edit";
 import ClientLayout from "./layouts/ClientLayouts";
 
+
 const routeConfig = [
     {
         path: "/",
@@ -21,7 +22,7 @@ const routeConfig = [
             { path: "aboutus", element: <Aboutus /> },
             { path: "cart", element: <Cart /> },
             { path: "blog", element: <Blog /> },
-            { path: "product/:id", element: <ProductsDetail /> },
+            { path: "products/:id", element: <ProductsDetail /> },
         ],
     },
     {
@@ -34,11 +35,11 @@ const routeConfig = [
         ],
     },
     {
-        path: "/register",
+        path: "/auth/register",
         element: <SignUp />,
     },
     {
-        path: "/login",
+        path: "/auth/login",
         element: <SignIn />,
     }
 ];

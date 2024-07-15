@@ -17,6 +17,7 @@ function ProductsDetail() {
             try {
                 const { data } = await api.get(`/products/${id}`);
                 setProduct(data);
+                console.log('Product data:', data);
             } catch (error) {
                 console.error("Error fetching product:", error);
             } finally {
@@ -87,7 +88,7 @@ function ProductsDetail() {
                                 />
                             </Box>
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid key={product._id} item xs={12} md={6}>
                             <Typography variant="h4" gutterBottom>
                                 {product.title}
                             </Typography>
@@ -138,7 +139,7 @@ function ProductsDetail() {
                             </Typography>
                             <Box sx={{ mt: 2 }}>
                                 <Typography variant="subtitle1" gutterBottom>
-                                    Category: {product.category}
+                                    Category: {product.category.name}
                                 </Typography>
                                 <Typography variant="subtitle1" gutterBottom>
                                     Description: {product.description}

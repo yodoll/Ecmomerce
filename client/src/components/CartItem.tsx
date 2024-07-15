@@ -16,14 +16,6 @@ const CartItem = () => {
 
     return (
         <>
-            <Grid container alignItems="center" justifyContent="space-between" fontWeight="fontWeightBold" fontSize="h6.fontSize" mb={5}>
-                <Grid item xs={2} textAlign="center">Image</Grid>
-                <Grid item xs={2} textAlign="center">Name</Grid>
-                <Grid item xs={2} textAlign="center">Price</Grid>
-                <Grid item xs={2} textAlign="center">Amount</Grid>
-                <Grid item xs={2} textAlign="center">Total</Grid>
-                <Grid item xs={2} textAlign="center">Role</Grid>
-            </Grid>
             <Grid container alignItems="center" justifyContent="space-between" textAlign="center">
                 <Grid item xs={2}><img src="https://picsum.photos/200" alt="" /></Grid>
                 <Grid item xs={2}>

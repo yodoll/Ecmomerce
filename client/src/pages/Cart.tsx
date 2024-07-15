@@ -1,13 +1,18 @@
-import { Box, Stack, Typography } from "@mui/material";
-import Footer from "src/components/Footer";
-import Header from "src/components/Header";
+import { Box, Grid, Stack, styled, Typography } from "@mui/material";
 import CartItem from "src/components/CartItem";
+
+const labels = ["Image", "Name", "Price", "Amount", "Total", "Role"];
+
 const Cart = () => {
     return (
         <>
-            <Header />
-            <Box p={6}>
+            <Wrapper>
                 <Box p={5}>
+                    <Grid container alignItems="center" justifyContent="space-between" fontWeight="fontWeightBold" fontSize="h6.fontSize" mb={5}>
+                        {labels.map((label, index) => {
+                            return <Grid key={index} item xs={2} textAlign="center">{label}</Grid>
+                        })}
+                    </Grid>
                     <CartItem />
                     <Box px={10}>
                         <Stack direction="row" justifyContent="space-between">
@@ -30,10 +35,13 @@ const Cart = () => {
                         </Stack>
                     </Box>
                 </Box>
-            </Box>
-            <Footer />
+            </Wrapper>
         </>
     );
 };
+
+const Wrapper = styled(Box)({
+    padding: 48
+})
 
 export default Cart;

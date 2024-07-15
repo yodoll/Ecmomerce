@@ -108,7 +108,7 @@ export default function Header() {
                             <MenuPopup onLogOut={handleLogout} />
                         </>
                     ) : (
-                        <Link href="/login">
+                        <Link href="/auth/login">
                             <Button sx={{ color: "white", "&:hover": { opacity: 0.5 } }}>Đăng nhập</Button>
                         </Link>
                     )}

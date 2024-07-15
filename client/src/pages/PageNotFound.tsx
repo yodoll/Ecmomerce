@@ -5,7 +5,7 @@ function PageNotFound() {
         <>
             <main>
                 <Typography variant="h6" align="center" padding={12}>
-                    Product not found.
+                    Page not found.
                 </Typography>
             </main>
         </>

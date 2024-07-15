@@ -7,10 +7,11 @@ import {
 import { Product } from "src/types/Product";
 import CardProduct from "src/components/CardProduct";
 import api from "src/api/api";
+import { useLoading } from "src/context/Loading";
 
 function Homepage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { loading, setLoading } = useLoading();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [viewAll, setViewAll] = useState<boolean>(false); // State to manage view all products
   const productsPerPage = 8;
@@ -19,9 +20,7 @@ function Homepage() {
       try {
           setLoading(true);
           const { data } = await api.get("/products");
-          setProducts(data);
-          console.log(data);
-          
+          setProducts(data);      
       } catch (error) {} finally {
         setLoading(false);
       }
@@ -63,16 +62,16 @@ function Homepage() {
     setCurrentPage(1); // Reset current page to 1
   };
 
-  const indexOfLastProduct = viewAll
-    ? products.length
-    : currentPage * productsPerPage;
-  const indexOfFirstProduct = viewAll
-    ? 0
-    : indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  );
+  // const indexOfLastProduct = viewAll
+  //   ? products.length
+  //   : currentPage * productsPerPage;
+  // const indexOfFirstProduct = viewAll
+  //   ? 0
+  //   : indexOfLastProduct - productsPerPage;
+  // const currentProducts = products.slice(
+  //   indexOfFirstProduct,
+  //   indexOfLastProduct
+  // );
 
   return (
     <>
@@ -83,7 +82,7 @@ function Homepage() {
               <LinearProgress style={{ width: "100%", marginTop: "10px" }} />
             </Grid>
           ) : (
-            currentProducts.map((product, index) => (
+            products.map((product, index) => (
               <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
                   <CardProduct _id={product._id} title={product.title} image={product.image} price={product.price} category={product.category} description={""} />
               </Grid>

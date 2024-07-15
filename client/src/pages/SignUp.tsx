@@ -12,21 +12,13 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { UserForm } from "src/types/User";
 import { useForm, SubmitHandler } from "react-hook-form";
-import Flash from "src/components/Flash";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "src/api/api";
-import React from "react";
+import { toast } from "react-toastify";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 export default function SignUp() {
-    const [showFlash, setShowFlash] = useState(false);
-    const [flashMessage, setFlashMessage] = React.useState("");
-    const [flashSeverity, setFlashSeverity] = React.useState<"success" | "error" | "warning" | "info">("success");
-    const handleCloseFlash = () => {
-        setShowFlash(false);
-      };
     const navigate = useNavigate();
     const {
         register,
@@ -38,22 +30,15 @@ export default function SignUp() {
     const onSubmit: SubmitHandler<UserForm> = async (data) => {
         try {
             await api.post("/auth/register", data);
-            setShowFlash(true);
-            setFlashMessage("You're sign-up successfully");
-            setFlashSeverity("success");
-            setTimeout(() => {
-                navigate("/login"); // Chuyển hướng sau 2 giây
-            }, 2000);
-        } catch (error) {
-            setShowFlash(true);
-            setFlashMessage("Email is exists!");
-            setFlashSeverity("error");
+            toast.success("You're sign-up successfully");
+            navigate("/auth/login");
+        } catch (error: any) {
+            toast.error(error.data.message);
         }
     };
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
-                <Flash isShow={showFlash} message={flashMessage} severity={flashSeverity} onClose={handleCloseFlash} />
                 <Box
                     sx={{
                         marginTop: 8,
@@ -137,7 +122,7 @@ export default function SignUp() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="/login" variant="body2">
+                                <Link href="auth/login" variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>

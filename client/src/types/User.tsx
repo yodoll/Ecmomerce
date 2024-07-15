@@ -3,5 +3,10 @@ export interface UserForm {
     email: string;
     password: string;
     confirmPassword?: string;
-    token?: string;
+}
+
+export interface User {
+    username: string;
+    email: string;
+    role: string;
 }

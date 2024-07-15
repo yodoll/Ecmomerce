@@ -1,7 +1,6 @@
-import * as React from "react";
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 // import FormControlLabel from "@mui/material/FormControlLabel";
 // import Checkbox from "@mui/material/Checkbox";
@@ -15,17 +14,11 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { UserForm } from "src/types/User";
-import Flash from "src/components/Flash";
 import api from "src/api/api";
+import { toast } from "react-toastify";
 
 const defaultTheme = createTheme();
 export default function SignIn() {
-    const [showFlash, setShowFlash] = React.useState(false);
-    const [flashMessage, setFlashMessage] = React.useState("");
-    const [flashSeverity, setFlashSeverity] = React.useState<"success" | "error" | "warning" | "info">("success");
-    const handleCloseFlash = () => {
-        setShowFlash(false);
-    };
     const navigate = useNavigate();
     const {
         register,
@@ -36,19 +29,13 @@ export default function SignIn() {
     const onSubmit: SubmitHandler<UserForm> = async (data) => {
         try {
             const respon = await api.post("/auth/login", data);
-            const { token } = respon.data;
+            const { token, user } = respon.data;
             localStorage.setItem("token", token);
-
-            setShowFlash(true);
-            setFlashMessage("You're sign-in successfully");
-            setFlashSeverity("success");
-              setTimeout(() => {
-                navigate("/"); // Chuyển hướng sau 2 giây
-            }, 2000);
-        } catch (error) {
-            setShowFlash(true);
-            setFlashMessage("Email is not valid or password is incorrect!");
-            setFlashSeverity("error");
+            localStorage.setItem("user", JSON.stringify(user));
+            toast.success("You're sign-in successfully");
+            navigate("/");
+        } catch (error: any) {
+           toast.error(error);
         }
     };
     return (
@@ -62,12 +49,6 @@ export default function SignIn() {
                 }}
             >
                 <Container component="main" maxWidth="xs">
-                    <Flash
-                        isShow={showFlash}
-                        message={flashMessage}
-                        severity={flashSeverity}
-                        onClose={handleCloseFlash}
-                    />
                     <Box
                         sx={{
                             display: "flex",
@@ -112,10 +93,6 @@ export default function SignIn() {
                                 error={!!errors.password?.message}
                                 autoComplete="current-password"
                             />
-                            {/* <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              /> */}
                             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                                 Sign In
                             </Button>
@@ -126,7 +103,7 @@ export default function SignIn() {
                                     </Link>
                                 </Grid>
                                 <Grid item>
-                                    <Link href="/register" variant="body2">
+                                    <Link href="/auth/register" variant="body2">
                                         {"Don't have an account? Sign Up"}
                                     </Link>
                                 </Grid>

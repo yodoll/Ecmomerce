@@ -4,5 +4,10 @@ export type Product = {
     price: number;
     description: string;
     image: string;
-    category: string;
+    category: Category;
+  };
+
+  export type Category = {
+    _id: string;
+    name: string;
   };

@@ -10,7 +10,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-const drawerWidth = 240;
+import { Typography } from "@mui/material";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
+
+const drawerWidth = 300;
+
 function SliderBar() {
     return (
         <>
@@ -22,14 +26,21 @@ function SliderBar() {
                     [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
                 }}
             >
-                <Toolbar />
+                <Typography variant="h4" textAlign={"center"} paddingTop={5} borderBottom={1} borderColor={"#ccc"}>
+                    Xin chào Admin
+                </Typography>
                 <Box sx={{ overflow: "auto" }}>
                     <List>
-                        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-                            <ListItem key={text} disablePadding>
-                                <ListItemButton>
+                        {[
+                            { text: "Danh sách sản phẩm", link: "/products" },
+                            { text: "Danh mục sản phẩm", link: "/category-list" },
+                            { text: "Thông tin người dùng", link: "/user-info" },
+                            { text: "Danh sách đơn hàng", link: "/order-list" },
+                        ].map((item, index) => (
+                            <ListItem key={item.text} disablePadding>
+                                <ListItemButton component={Link} to={item.link}> {/* Use component={Link} and to={item.link} */}
                                     <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                                    <ListItemText primary={text} />
+                                    <ListItemText primary={item.text} />
                                 </ListItemButton>
                             </ListItem>
                         ))}
@@ -40,4 +51,5 @@ function SliderBar() {
         </>
     );
 }
+
 export default SliderBar;
