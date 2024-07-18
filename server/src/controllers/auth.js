@@ -67,7 +67,7 @@ class AuthController {
               
       
             const token = jwt.sign({ id: checkUser._id }, "process.env.SECRET_KEY", {
-              expiresIn: "1w",
+              expiresIn: "1h",
             });
             res.status(StatusCodes.OK).json({
               message: "Login ok",

@@ -32,7 +32,7 @@ class ProductsController {
         data: newProduct,
       });
     } catch (error) {
-      next(error);
+      return res.status(400).json({message: "Create Product Failure", error})
     }
   }
   // PUT /products/:id
