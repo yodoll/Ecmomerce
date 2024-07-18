@@ -4,6 +4,10 @@ import { Product } from "src/types/Product";
 
 
 function CardProduct({_id, title, image, price} : Product) {
+    const handleCart = () => {
+        console.log("added card!");
+        
+    }
     return (
         <>
             <Card
@@ -29,7 +33,7 @@ function CardProduct({_id, title, image, price} : Product) {
                     </Typography>
                 </CardContent>
                 <CardActions sx={{ justifyContent: "space-between" }}>
-                    <Button size="small" color="primary">
+                    <Button onClick={handleCart} size="small" color="primary">
                         Add to cart
                     </Button>
                     <Link to={`/products/${_id}`} style={{ textDecoration: "none" }}>

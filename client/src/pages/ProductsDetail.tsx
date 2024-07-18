@@ -1,12 +1,20 @@
-import { Box, Button, Container, Divider, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Divider, Grid, IconButton, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Product } from "../types/Product";
 import PageNotFound from "./PageNotFound";
 import api from "src/api/api";
+import { useCart } from "src/context/Cart";
+import CartItem from "src/components/CartItem";
+
+type cartItem = {
+    product: Product;
+    quantity: number;
+};
 
 function ProductsDetail() {
     const { id } = useParams();
+    const { setCart } = useCart();
     const [loading, setLoading] = useState<boolean>(false);
     const [product, setProduct] = useState<Product | null>(null);
     const [quantity, setQuantity] = useState<number>(1); // State for quantity
@@ -17,7 +25,6 @@ function ProductsDetail() {
             try {
                 const { data } = await api.get(`/products/${id}`);
                 setProduct(data);
-                console.log('Product data:', data);
             } catch (error) {
                 console.error("Error fetching product:", error);
             } finally {
@@ -30,9 +37,20 @@ function ProductsDetail() {
         }
     }, [id]);
 
-    const handleAddToCart = () => {
-        // Logic to add product to cart, e.g., dispatch an action or update state
-        console.log(`Added ${quantity} ${product?.title}(s) to cart`);
+    const handleAddToCart = (product: Product) => {
+        if(quantity < 0) return;
+        const cartStorage = localStorage.getItem("cart") || "[]";
+        let carts = JSON.parse(cartStorage) as cartItem[];
+        const findCartItem = carts.find((item) => item.product._id === product._id);
+        if (findCartItem) {
+            carts = carts.map((item) =>
+                item.product._id === product._id ? { ...item, quantity: item.quantity + quantity } : item
+            );
+        } else {
+            carts.push({ product, quantity });
+        }
+        localStorage.setItem("cart", JSON.stringify(carts));
+        setCart(carts.length);
     };
 
     if (loading) {
@@ -100,33 +118,42 @@ function ProductsDetail() {
                                 {product.description}
                             </Typography>
                             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                                <Button
-                                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                    variant="outlined"
-                                    size="small" // Thêm size small cho nút -
-                                    sx={{ minWidth: 0, mr: 1, borderRadius: 8 }} // Điều chỉnh lề và kích thước của nút -
+                                <IconButton>
+                                    <Button
+                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                        variant="outlined"
+                                        size="small" // Thêm size small cho nút -
+                                        sx={{ minWidth: 100, borderRadius: 8, fontSize: 16 }} // Điều chỉnh lề và kích thước của nút -
+                                    >
+                                        -
+                                    </Button>
+                                </IconButton>
+                                <Typography
+                                    variant="body1"
+                                    component="span"
+                                    sx={{ px: 4, py: 1, border: "1px solid #ccc", borderRadius: 8 }}
                                 >
-                                    -
-                                </Button>
-                                <Typography variant="body1" component="span" sx={{ mx: 2 }}>
                                     {quantity}
                                 </Typography>
-                                <Button
-                                    onClick={() => setQuantity(quantity + 1)}
-                                    variant="outlined"
-                                    size="small" // Thêm size small cho nút +
-                                    sx={{ minWidth: 0, ml: 1, borderRadius: 8 }} // Điều chỉnh lề và kích thước của nút +
-                                >
-                                    +
-                                </Button>
+                                <IconButton>
+                                    <Button
+                                        onClick={() => setQuantity(quantity + 1)}
+                                        variant="outlined"
+                                        size="small" // Thêm size small cho nút +
+                                        sx={{ minWidth: 100, borderRadius: 8, fontSize: 16 }} // Điều chỉnh lề và kích thước của nút +
+                                    >
+                                        +
+                                    </Button>
+                                </IconButton>
                             </Box>
                             <Button
-                                onClick={handleAddToCart}
+                                onClick={() => handleAddToCart(product)}
                                 variant="contained"
                                 color="primary"
                                 size="large"
                                 sx={{
                                     mb: 2,
+                                    minWidth: 200,
                                     borderRadius: 8,
                                     boxShadow: "none",
                                     textTransform: "none",

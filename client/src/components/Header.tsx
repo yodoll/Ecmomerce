@@ -13,6 +13,7 @@ import {Badge, BadgeProps, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MenuPopup from "./MenuPopup";
 import { useUser } from "src/context/User";
+import { useCart } from "src/context/Cart";
 
 const styles = {
     appBar: {
@@ -34,13 +35,20 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 
 export default function Header() {
     const {user, setUser} = useUser();
-    // const token = localStorage.getItem("token");
+    const { cart, setCart } = useCart();
     useEffect(() => {
-        const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
-        setUser(userInfo);    
-    }, []);
+        const token = localStorage.getItem("token");
+        if (token) {
+            const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
+            setUser(userInfo);
+        } else {
+            setUser(null);
+        }
+    }, [setUser]);
 
     const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
         setUser(null);
     };
 
@@ -100,7 +108,7 @@ export default function Header() {
                     }}
                 >
                     <IconButton aria-label="cart">
-                        <StyledBadge badgeContent={4} color="secondary">
+                        <StyledBadge badgeContent={cart} color="secondary">
                             <ShoppingCartIcon />
                         </StyledBadge>
                     </IconButton>

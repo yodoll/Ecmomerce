@@ -1,4 +1,4 @@
-export interface UserForm {
+export type UserForm = {
     _id?: string;
     username?: string;
     email: string;

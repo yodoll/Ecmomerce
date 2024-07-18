@@ -1,4 +1,5 @@
 import { Box, Grid, Stack, styled, Typography } from "@mui/material";
+import Banner from "src/components/Banner";
 import CartItem from "src/components/CartItem";
 
 const labels = ["Image", "Name", "Price", "Amount", "Total", "Role"];
@@ -6,6 +7,7 @@ const labels = ["Image", "Name", "Price", "Amount", "Total", "Role"];
 const Cart = () => {
     return (
         <>
+            <Banner />
             <Wrapper>
                 <Box p={5}>
                     <Grid container alignItems="center" justifyContent="space-between" fontWeight="fontWeightBold" fontSize="h6.fontSize" mb={5}>
