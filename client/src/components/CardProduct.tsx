@@ -25,8 +25,12 @@ function CardProduct({_id, title, image, price} : Product) {
                     alt={title}
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h6" component="div">
-                        {title}
+                    <Typography gutterBottom variant="h6" component="div" sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                        }}>
+                        {title}...
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ fontSize: "16px" }}>
                         Price: ${price}

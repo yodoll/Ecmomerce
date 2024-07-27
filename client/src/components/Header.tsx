@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import InputBase from "@mui/material/InputBase";
@@ -35,7 +35,7 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 
 export default function Header() {
     const {user, setUser} = useUser();
-    const { cart, setCart } = useCart();
+    // const { cart} = useCart();
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -108,7 +108,7 @@ export default function Header() {
                     }}
                 >
                     <IconButton aria-label="cart">
-                        <StyledBadge badgeContent={cart} color="secondary">
+                        <StyledBadge badgeContent={1} color="secondary">
                             <ShoppingCartIcon />
                         </StyledBadge>
                     </IconButton>

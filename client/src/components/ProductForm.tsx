@@ -11,25 +11,28 @@ import {
 } from "@mui/material";
 import { ValidationErrors } from "final-form";
 import { Field, Form } from "react-final-form";
-import { ProductFormParams } from "src/types/Product";
+import { Product, ProductFormParams } from "src/types/Product";
 import { InputText } from "./elements/InputText";
 import useCategory from "src/hooks/Category";
 
 type ProductFormProps = {
     onSubmit: (values: ProductFormParams) => void;
-    initialValues?: any;
+    initialValues?: Product;
 };
 
 function ProductForm({ onSubmit, initialValues }: ProductFormProps) {
-    const {categories} = useCategory();
+    const { categories } = useCategory();
+    
     const validate = (values: ProductFormParams) => {
-        const { title, image, category, price } = values;
+        const { title, image, category, price, description } = values;
         const errors: ValidationErrors = {};
         if (!title) errors.title = "Can nhap title vao";
         if (title && title.length < 6) errors.title = "Can nhap toi thieu 6 ky tu vao";
         if (!image) errors.image = "Can nhap image vao";
         if (!category) errors.category = "Can nhap category vao";
         if (!price) errors.price = "Can nhap price vao";
+        if (price < 0) errors.price = "Giá không được thấp hơn 0";
+        if (!description) errors.description = "Can nhap description vao";
         return errors;
     };
 
@@ -83,17 +86,21 @@ function ProductForm({ onSubmit, initialValues }: ProductFormProps) {
                         />
                         <Field<string>
                             name="category"
-                            render={({ input, meta }) => {
+                            render={({ input, meta }) => {      
+                                
                                 return (
                                     <FormControl fullWidth>
                                         <InputLabel>Category</InputLabel>
-                                        <Select label="Category" {...input} error={meta.touched && meta.error}>
-                                            <MenuItem value="">Select</MenuItem>
-                                            {categories.map(item => 
+                                        <Select
+                                            labelId="demo-multiple-name-label"
+                                            id="demo-multiple-name"
+                                            {...input}
+                                        >
+                                            {categories.map((item) => (
                                                 <MenuItem key={item._id} value={item._id}>
                                                     {item.name}
                                                 </MenuItem>
-                                            )}
+                                            ))}
                                         </Select>
                                         {meta.touched && meta.error && <FormHelperText>{meta.error}</FormHelperText>}
                                     </FormControl>

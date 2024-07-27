@@ -11,6 +11,8 @@ import AdminProductList from "./pages/admin/product/list";
 import AdminAddProduct from "./pages/admin/product/add";
 import AdminEditProduct from "./pages/admin/product/edit";
 import ClientLayout from "./layouts/ClientLayouts";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 
 const routeConfig = [

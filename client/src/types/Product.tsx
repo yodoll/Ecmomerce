@@ -1,4 +1,5 @@
 export type Product = {
+    // variations: Variation[];
     _id: string;
     title: string;
     price: number;
@@ -7,13 +8,18 @@ export type Product = {
     category: Category;
   };
 
+  export type Variation = {
+    size: string;
+    stock: number;
+  };
+
   export type Category = {
     _id: string;
     name: string;
   };
 
   export type ProductFormParams = {
-    _id?: string;
+    _id: string;
     title: string;
     price: number;
     image: string;

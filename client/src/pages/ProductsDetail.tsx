@@ -3,32 +3,32 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Product } from "../types/Product";
 import PageNotFound from "./PageNotFound";
-import api from "src/api/api";
-import { useCart } from "src/context/Cart";
-import CartItem from "src/components/CartItem";
+import { useCart } from "src/hooks/Cart";
+import { useLoading } from "src/context/Loading";
+import useProduct from "src/hooks/Product";
 
-type cartItem = {
-    product: Product;
-    quantity: number;
-};
 
 function ProductsDetail() {
-    const { id } = useParams();
-    const { setCart } = useCart();
-    const [loading, setLoading] = useState<boolean>(false);
+    const { id } = useParams<string>();
+    const { loading, setLoading} = useLoading();
+    const { getProductById } = useProduct();
+    const { addToCart } = useCart();
     const [product, setProduct] = useState<Product | null>(null);
     const [quantity, setQuantity] = useState<number>(1); // State for quantity
 
     useEffect(() => {
         const getProduct = async () => {
             setLoading(true);
-            try {
-                const { data } = await api.get(`/products/${id}`);
-                setProduct(data);
-            } catch (error) {
-                console.error("Error fetching product:", error);
-            } finally {
-                setLoading(false);
+            if (id) {
+                setLoading(true);
+                try {
+                    const data = await getProductById(id);
+                    setProduct(data);
+                } catch (error) {
+                    console.error("Error fetching product:", error);
+                } finally {
+                    setLoading(false);
+                }
             }
         };
 
@@ -39,18 +39,7 @@ function ProductsDetail() {
 
     const handleAddToCart = (product: Product) => {
         if(quantity < 0) return;
-        const cartStorage = localStorage.getItem("cart") || "[]";
-        let carts = JSON.parse(cartStorage) as cartItem[];
-        const findCartItem = carts.find((item) => item.product._id === product._id);
-        if (findCartItem) {
-            carts = carts.map((item) =>
-                item.product._id === product._id ? { ...item, quantity: item.quantity + quantity } : item
-            );
-        } else {
-            carts.push({ product, quantity });
-        }
-        localStorage.setItem("cart", JSON.stringify(carts));
-        setCart(carts.length);
+        addToCart(product, quantity);
     };
 
     if (loading) {
@@ -111,7 +100,7 @@ function ProductsDetail() {
                                 {product.title}
                             </Typography>
                             <Typography variant="h6" gutterBottom>
-                                ${product.price}
+                                Price: ${product.price}
                             </Typography>
                             <Divider sx={{ mb: 2 }} />
                             <Typography variant="body1" paragraph>

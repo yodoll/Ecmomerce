@@ -1,82 +1,69 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState} from "react";
 import { toast } from "react-toastify";
 import api from "src/api/api";
 import { Product, ProductFormParams } from "src/types/Product";
 
+type ApiError = {
+    message: string;
+};
+
 const useProduct = () => {
     const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    // const [error, setError] = useState<string | null>(null);
-
+    
     const getProducts = async () => {
-        setLoading(true);
         try {
-            const {data} = await api.get("/products");
+            const { data } = await api.get("/products");
             setProducts(data);
-        } catch (err: any) {
+        } catch (error) {
+            const err = (error as ApiError).message
             toast.error(err);
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
 
     const getProductById = async (productId: string) => {
-        setLoading(true);
         try {
             const { data } = await api.get(`/products/${productId}`);
             return data; // Return the fetched product data
-        } catch (err: any) {
-            toast.error(err);
-            return null; // Handle error case
-        } finally {
-            setLoading(false);
+        } catch (error) {
+            const errorMessage = (error as ApiError).message || "An error occurred while fetching the product.";
+            toast.error(errorMessage);
         }
     };
 
     const addProduct = async (product: ProductFormParams) => {
-        setLoading(true);
         try {
             const response = await api.post("/products", product);
             setProducts((prevProducts) => [...prevProducts, response.data]);
-            toast.success("Added product successfully")
-        } catch (err:any) {
-            console.log(err);
-        } finally {
-            setLoading(false);
+        } catch (error) {
+            const errorMessage = (error as ApiError).message || "An error occurred while adding the product.";
+            toast.error(errorMessage);
         }
     };
 
     const updateProduct = async (product: Product) => {
-        setLoading(true);
         try {
             await api.put(`/products/${product._id}`, product);
-            setProducts((prevProducts) =>
-                prevProducts.map((p) => (p._id === product._id ? product : p))
-            );
-        } catch (err: any) {
-            toast.error(err);
-        } finally {
-            setLoading(false);
-        }
+            setProducts((prevProducts) => prevProducts.map((p) => (p._id === product._id ? product : p)));
+        } catch (error) {
+            const errorMessage = (error as ApiError).message || "An error occurred while updating the product.";
+            toast.error(errorMessage);
+        } 
     };
 
     const deleteProduct = async (productId: string) => {
-        setLoading(true);
         try {
             await api.delete(`/products/${productId}`);
             setProducts((prevProducts) => prevProducts.filter((p) => p._id !== productId));
-        } catch (err: any) {
-            toast.error(err);
-        } finally {
-            setLoading(false);
-        }
+        } catch (error) {
+            const errorMessage = (error as ApiError).message || "An error occurred while deleting the product.";
+            toast.error(errorMessage);
+        } 
     };
-
     useEffect(() => {
-        getProducts()
-    }, []);
+        getProducts();
+    }, [])
 
-    return { products, loading, getProductById ,addProduct, updateProduct, deleteProduct, getProducts };
+    return { products, getProductById, addProduct, updateProduct, deleteProduct, getProducts };
 };
 
 export default useProduct;
