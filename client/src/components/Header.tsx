@@ -1,4 +1,4 @@
-import { useEffect} from "react";
+import { useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import InputBase from "@mui/material/InputBase";
@@ -9,120 +9,172 @@ import Button from "@mui/material/Button";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Link from "@mui/material/Link";
-import {Badge, BadgeProps, Box } from "@mui/material";
+import { Badge, BadgeProps, Box, useTheme } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MenuPopup from "./MenuPopup";
 import { useUser } from "src/context/User";
-import { useCart } from "src/context/Cart";
 
-const styles = {
-    appBar: {
-        position: "fixed",
-        top: 0,
-        zIndex: 1000,
-        margin: 0,
-        padding: 0
-    },
-};
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  position: "fixed",
+  top: 0,
+  zIndex: 1000,
+  backgroundColor: theme.palette.primary.main,
+  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+}));
+
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
-    "& .MuiBadge-badge": {
-        right: -3,
-        top: 13,
-        border: `2px solid ${theme.palette.background.paper}`,
-        padding: "0 4px",
-    },
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}));
+
+const SearchBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: "8px",
+  padding: "0 10px",
+  width: "40%",
+  boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+  [theme.breakpoints.down("md")]: {
+    width: "60%",
+  },
+}));
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  fontFamily: "sans-serif",
+  color: theme.palette.common.white,
+  fontSize: "1.2rem",
+  fontWeight: "bold",
+  "&:hover": {
+    opacity: 0.7,
+    transition: "opacity 0.3s ease-in-out",
+  },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.common.white,
+  "&:hover": {
+    opacity: 0.7,
+    transition: "opacity 0.3s ease-in-out",
+  },
 }));
 
 export default function Header() {
-    const {user, setUser} = useUser();
-    // const { cart} = useCart();
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
-            setUser(userInfo);
-        } else {
-            setUser(null);
-        }
-    }, [setUser]);
+  const theme = useTheme();
+  const { user, setUser } = useUser();
+  // const { cart } = useCart();
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setUser(null);
-    };
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
+      setUser(userInfo);
+    } else {
+      setUser(null);
+    }
+  }, [setUser]);
 
-    return (
-        <AppBar position="static" sx={styles.appBar}>
-            <Toolbar>
-                <Box>
-                    <Link
-                        href="/"
-                        underline="none"
-                        sx={{ fontFamily: "sans-serif", color: "white", "&:hover": { opacity: 0.5 } }}
-                    >
-                        ATM LOGO
-                    </Link>
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        flexGrow: 1,
-                        justifyContent: "center",
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            bgcolor: "white",
-                            borderRadius: "4px",
-                            width: "30%",
-                        }}
-                    >
-                        <InputBase
-                            placeholder="Tìm kiếm..."
-                            inputProps={{ "aria-label": "Tìm kiếm" }}
-                            sx={{ mr: 1, pl: 1 }}
-                        />
-                        <IconButton color="inherit" aria-label="search">
-                            <SearchIcon sx={{ color: "black" }} />
-                        </IconButton>
-                    </Box>
-                </Box>
-                <Tabs value={false} aria-label="navigation tabs" sx={{ width: "30%" }}>
-                    <Tab sx={{ color: "white", "&:hover": { opacity: 0.5 } }} label="Sản phẩm" href="/" />
-                    <Tab sx={{ color: "white", "&:hover": { opacity: 0.5 } }} label="About Us" href="/aboutus" />
-                    <Tab sx={{ color: "white", "&:hover": { opacity: 0.5 } }} label="Blog" href="/blog" />
-                    {/* Thêm các tab khác nếu cần */}
-                </Tabs>
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-around",
-                        width: "15%",
-                        ml: "15px",
-                    }}
-                >
-                    <IconButton aria-label="cart">
-                        <StyledBadge badgeContent={1} color="secondary">
-                            <ShoppingCartIcon />
-                        </StyledBadge>
-                    </IconButton>
-                    {user ? (
-                        <>
-                            <MenuPopup onLogOut={handleLogout} />
-                        </>
-                    ) : (
-                        <Link href="/auth/login">
-                            <Button sx={{ color: "white", "&:hover": { opacity: 0.5 } }}>Đăng nhập</Button>
-                        </Link>
-                    )}
-                </Box>
-            </Toolbar>
-        </AppBar>
-    );
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+  };
+
+  return (
+    <StyledAppBar>
+      <Toolbar>
+        <Box>
+          <StyledLink href="/" underline="none">
+            ATM LOGO
+          </StyledLink>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexGrow: 1,
+            justifyContent: "center",
+          }}
+        >
+          <SearchBox>
+            <InputBase
+              placeholder="Tìm kiếm..."
+              inputProps={{ "aria-label": "Tìm kiếm" }}
+              sx={{ color: theme.palette.text.primary, flex: 1 }}
+            />
+            <IconButton color="inherit" aria-label="search">
+              <SearchIcon sx={{ color: theme.palette.text.secondary }} />
+            </IconButton>
+          </SearchBox>
+        </Box>
+        <Tabs value={false} aria-label="navigation tabs" sx={{ width: "30%" }}>
+          <Tab
+            sx={{
+              color: theme.palette.common.white,
+              fontSize: "1rem",
+              "&:hover": {
+                opacity: 0.7,
+                transition: "opacity 0.3s ease-in-out",
+              },
+            }}
+            label="Sản phẩm"
+            href="/"
+          />
+          <Tab
+            sx={{
+              color: theme.palette.common.white,
+              fontSize: "1rem",
+              "&:hover": {
+                opacity: 0.7,
+                transition: "opacity 0.3s ease-in-out",
+              },
+            }}
+            label="About Us"
+            href="/aboutus"
+          />
+          <Tab
+            sx={{
+              color: theme.palette.common.white,
+              fontSize: "1rem",
+              "&:hover": {
+                opacity: 0.7,
+                transition: "opacity 0.3s ease-in-out",
+              },
+            }}
+            label="Blog"
+            href="/blog"
+          />
+        </Tabs>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-around",
+            width: "15%",
+            ml: "15px",
+          }}
+        >
+          <IconButton aria-label="cart">
+            <StyledBadge badgeContent={1} color="secondary">
+              <ShoppingCartIcon />
+            </StyledBadge>
+          </IconButton>
+          {user ? (
+            <>
+              <MenuPopup onLogOut={handleLogout} />
+            </>
+          ) : (
+            <Link href="/auth/login">
+              <StyledButton>Đăng nhập</StyledButton>
+            </Link>
+          )}
+        </Box>
+      </Toolbar>
+    </StyledAppBar>
+  );
 }

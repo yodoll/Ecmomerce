@@ -92,8 +92,8 @@ const Homepage = () => {
             <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
               <CardProduct
                 _id={product._id}
-                title={product.title}
                 image={product.image || "placeholder-image-url.jpg"}
+                title={product.title}
                 price={product.price}
                 category={product.category}
                 description={""}
